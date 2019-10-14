@@ -11,10 +11,8 @@
     [RequireComponent(typeof(SpriteLot))]
     [RequireComponent(typeof(TiledLoader))]
 
-    abstract public class BaseTilemapXXI : MonoBehaviour
+    abstract public class BaseTilemapXXI : BaseSimpleXXI
     {
-        public BankLot banks { get { return GetComponent<BankLot>(); } }
-        public SpriteLot sprites { get { return GetComponent<SpriteLot>(); } }
         public TiledLoader loader { get { return GetComponent<TiledLoader>(); } }
 
         public Tilemap tilemap; // must be assigned
@@ -23,13 +21,6 @@
         abstract public int[] GetSolidTileIds();
         abstract public int[] GetSpawnTileIds();
         abstract public void SpawnTileId(int TileId, Vector3Int TilePos);
-
-        protected Dictionary<string, EntityLot> entlots = new Dictionary<string, EntityLot>();
-        public EntityLot GetEntLot(string entLotName)
-        {
-            if (!entlots.ContainsKey(entLotName)) entlots.Add(entLotName, EntityLot.NewEntLot(entLotName));
-            return entlots[entLotName];
-        }
 
         // if loading from loader
 
