@@ -57,6 +57,7 @@
         }
         public static float remap(float a1, float b1, float a2, float b2, float originalValue)
         {
+            // remap originalValue from "a1-b1" space to "a2-b2" space
             return (originalValue - a1) / (b1 - a1) * (b2 - a2) + a2;
         }
 

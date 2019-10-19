@@ -7,7 +7,7 @@ public class BirdParkXXI : navdi3.xxi.BaseSimpleXXI
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 1; i++)
         banks["foot bird"].Spawn<FootBird>(GetEntLot("birds"));
     }
 
