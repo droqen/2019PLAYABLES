@@ -22,11 +22,16 @@
         abstract public int[] GetSpawnTileIds();
         abstract public void SpawnTileId(int TileId, Vector3Int TilePos);
 
+        int[] _SolidTileIds;
+        int[] SolidTileIds { get { if (_SolidTileIds == null) _SolidTileIds = GetSolidTileIds(); return _SolidTileIds; } }
+        int[] _SpawnTileIds;
+        int[] SpawnTileIds { get { if (_SpawnTileIds == null) _SpawnTileIds = GetSpawnTileIds(); return _SpawnTileIds; } }
+
         // if loading from loader
 
         protected void InitializeTileSystem()
         {
-            loader.SetupTileset(sprites, GetSolidTileIds(), GetSpawnTileIds());
+            loader.SetupTileset(sprites, SolidTileIds, SpawnTileIds);
             loader.PlaceTiles(loader.Load(firstLevel), tilemap, this.SpawnTileId);
         }
 
@@ -34,7 +39,7 @@
 
         public void InitializeManualTT()
         {
-            loader.SetupTileset(sprites, GetSolidTileIds(), GetSpawnTileIds());
+            loader.SetupTileset(sprites, SolidTileIds, SpawnTileIds);
             tts = new Dictionary<twin, int>();
         }
         public void ClearAllTilesTT()
