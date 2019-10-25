@@ -8,11 +8,11 @@ namespace navdi3
     {
         public static bool JoyButt(int joy, int butt)
         {
-            return Input.GetKey(KeyCode.Joystick1Button0 + butt + (joy-1) * (KeyCode.Joystick1Button0 - KeyCode.Joystick2Button0));
+            return Input.GetKey(KeyCode.Joystick1Button0 + butt + (joy-1) * (KeyCode.Joystick2Button0 - KeyCode.Joystick1Button0));
         }
         public static bool JoyButtDown(int joy, int butt)
         {
-            return Input.GetKeyDown(KeyCode.Joystick1Button0 + butt + (joy-1) * (KeyCode.Joystick1Button0 - KeyCode.Joystick2Button0));
+            return Input.GetKeyDown(KeyCode.Joystick1Button0 + butt + (joy-1) * (KeyCode.Joystick2Button0 - KeyCode.Joystick1Button0));
         }
         public static float JoyAxis(int joy, int axis)
         {
