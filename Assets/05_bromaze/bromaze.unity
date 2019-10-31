@@ -272,8 +272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   master: {fileID: 0}
   baseSpeed: 15
-  moveAccelMult: 0.1
-  moveAccelLinear: 0.05
+  moveAccelMult: 0
+  moveAccelLinear: 11
   autoFlipX: 1
   standingAniSpeed: 0.01
   movingAniSpeed: 0.05
@@ -282,6 +282,41 @@ MonoBehaviour:
   balledDuration: 0
   balledMaterial: {fileID: 6200000, guid: 2b1ab0a491a1041389bcc5dba74fcf7f, type: 2}
   unballedMaterial: {fileID: 6200000, guid: f25d1b4117ec344b290ece7d7f4125bb, type: 2}
+--- !u!84 &376358160
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  serializedVersion: 3
+  m_Width: 160
+  m_Height: 144
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthFormat: 1
+  m_ColorFormat: 59
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 0
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &431612899
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,41 +494,6 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
---- !u!84 &520320420
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 3
-  m_Width: 160
-  m_Height: 144
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthFormat: 1
-  m_ColorFormat: 59
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 0
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &979598557
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,9 +621,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.5}
   serializedVersion: 2
-  m_Radius: 3.9
+  m_Radius: 3.4
 --- !u!212 &1120131684
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -688,8 +688,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   master: {fileID: 0}
   baseSpeed: 30
-  moveAccelMult: 0.25
-  moveAccelLinear: 0.05
+  moveAccelMult: 0
+  moveAccelLinear: 10
   autoFlipX: 1
   standingAniSpeed: 0.025
   movingAniSpeed: 0.1
@@ -888,7 +888,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -2.5}
+  m_Offset: {x: 0, y: -1.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1255,13 +1255,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   master: {fileID: 0}
   baseSpeed: 20
-  moveAccelMult: 0.1
-  moveAccelLinear: 0.05
+  moveAccelMult: 0
+  moveAccelLinear: 11
   autoFlipX: 1
   standingAniSpeed: 0.01
   movingAniSpeed: 0.05
   moveCenterStuckFrames: 0
   pregnant: 1
+  ghostly: 0
 --- !u!1001 &1880733130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1333,7 +1334,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 520320420}
+      objectReference: {fileID: 376358160}
     - target: {fileID: 8721497846820241106, guid: a87e598a749bb4800b52ead0fc4cc76a,
         type: 3}
       propertyPath: orthographic size

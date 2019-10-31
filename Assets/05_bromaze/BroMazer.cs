@@ -18,16 +18,20 @@ public class BroMazer : MazeBody
     public bool autoFlipX = true;
     public float standingAniSpeed = .01f;
     public float movingAniSpeed = .05f;
+
+    Vector2 lastDesiredVelocity;
     
     protected void SpriterUpdate()
     {
         bani.speed = Util.remap(0, baseSpeed, standingAniSpeed, movingAniSpeed, body.velocity.magnitude);
-        if (Mathf.Abs(body.velocity.x) > 0.1f * baseSpeed)
-            spriter.flipX = body.velocity.x < 0;
+        if (Mathf.Abs(lastDesiredVelocity.x) > 0.1f * baseSpeed)
+            spriter.flipX = lastDesiredVelocity.x < 0;
     }
 
     protected void MoveUpdate_TargetVelocity(Vector2 targetVelocity)
     {
+        lastDesiredVelocity = targetVelocity;
+        
         if (moveAccelMult > 0)
         {
             body.velocity = body.velocity * (1 - moveAccelMult) + (moveAccelMult) * targetVelocity;
@@ -35,9 +39,9 @@ public class BroMazer : MazeBody
         if (moveAccelLinear > 0)
         {
             var toTarget = targetVelocity - body.velocity;
-            if (toTarget.sqrMagnitude > Mathf.Pow(moveAccelLinear * baseSpeed, 2))
+            if (toTarget.sqrMagnitude > Mathf.Pow(moveAccelLinear, 2))
             {
-                body.velocity += toTarget.normalized * moveAccelLinear * baseSpeed;
+                body.velocity += toTarget.normalized * moveAccelLinear;
             } else
             {
                 body.velocity = targetVelocity;
@@ -51,8 +55,8 @@ public class BroMazer : MazeBody
     protected void MoveUpdate_Center(float speed)
     {
         if (body.velocity.sqrMagnitude < lastCenterVelocity.sqrMagnitude
-            || body.velocity.x * lastCenterVelocity.x < 0
-            || body.velocity.y * lastCenterVelocity.y < 0
+            || body.velocity.x * ToCentered().x < 0
+            || body.velocity.y * ToCentered().y < 0
             )
         {
             moveCenterStuckFrames++;
@@ -81,5 +85,20 @@ public class BroMazer : MazeBody
     protected void RefreshCell()
     {
         my_cell_pos = new twin(master.grid.WorldToCell(this.transform.position));
+    }
+
+    protected void ChooseNewDir_Forward()
+    {
+        var dirs = new ChoiceStack<twin>();
+        dirs.Add(twin.down); // prefer 'down': gravity
+        dirs.AddManyThenLock(twin.compass);
+        dirs.RemoveAll(-lastMove);
+        lastMove = dirs.GetFirstTrue(this.TryMove);
+    }
+    protected void ChooseNewDir_Reverse()
+    {
+        lastMove = -lastMove;
+        RefreshCell();
+        TryMove(lastMove);
     }
 }

@@ -22,10 +22,15 @@ public class bromazexxi : BaseTilemapXXI
 
         new twinrect(-10, -9, 10, 9).DoEach(cell =>
         {
+            int alignment = 0;
+            if (Mathf.Abs(cell.x) % 2 == 0) alignment++;
+            if (Mathf.Abs(cell.y) % 2 == 0) alignment++;
+            if (Random.value < .04f) alignment--;
+            
             if (// If in center 'circle'
-                cell.sqrLength < Random.Range(30, 80)
+                cell.sqrLength < Random.Range(20, 100)
             &&  // If at all gridaligned
-                (Mathf.Abs(cell.x) % 2 == 0 || Mathf.Abs(cell.y) % 2 == 0)
+                alignment > 0
             ) {
                 // Open cell
                 Sett(cell, Random.Range(0, 10));

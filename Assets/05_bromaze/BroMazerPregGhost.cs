@@ -7,44 +7,50 @@ using navdi3;
 public class BroMazerPregGhost : BroMazer
 {
     public bool pregnant = true;
+    public int ghostly = 0;
 
     private void FixedUpdate()
     {
         SpriterUpdate();
         MoveUpdate_Center(pregnant? baseSpeed * 0.5f : baseSpeed);
-        if (CheckIsFrustrated(pregnant?120:60))
+        if (ghostly > 0)
+        {
+            ghostly--;
+            if (ghostly <= 0) BecomeUnghostly();
+        }
+
+        if (CheckIsFrustrated(pregnant?120:30))
         {
             if (pregnant)
             {
-                // split into 2 babies
-                lastMove = new twin(this.lastMove.y, this.lastMove.x);
-                RefreshCell();
-
+                ChooseNewDir_Reverse();
                 this.BecomeBaby();
+                this.BecomeGhostly();
+                transform.position += new twin(Random.Range(-2, 2 + 1), Random.Range(-2, 2 + 1));
 
+                // split into 3 babies
                 for (int i = 0; i < 2; i++)
                 {
                     var baby = bromazexxi.Instance.banks["pregghost"].Spawn<BroMazerPregGhost>(bromazexxi.Instance.CreaturesLot);
                     baby.Setup(master, my_cell_pos);
 
-                    baby.lastMove = -this.lastMove;
-
                     baby.BecomeBaby();
+                    baby.BecomeGhostly();
+                    baby.transform.position = this.transform.position + new twin(Random.Range(-2, 2 + 1), Random.Range(-2, 2 + 1));
+
+                    baby.lastMove = -this.lastMove;
+                    baby.RefreshCell();
+                    baby.ChooseNewDir_Forward();
                 }
             } else
             {
                 // just pick a new dir. try turning around.
-                lastMove = -lastMove;
-                RefreshCell();
-                TryMove(lastMove);
+                BecomeGhostly();
             }
         }
         if (IsWithinDistOfCentered(2f))
         {
-            var dirs = new ChoiceStack<twin>();
-            dirs.AddManyThenLock(twin.compass);
-            dirs.RemoveAll(-lastMove);
-            lastMove = dirs.GetFirstTrue(this.TryMove);
+            ChooseNewDir_Forward();
         }
     }
 
@@ -59,5 +65,20 @@ public class BroMazerPregGhost : BroMazer
             }
             TryMove(lastMove);
         }
+    }
+    void BecomeGhostly()
+    {
+        if (this.ghostly <= 0)
+        {
+            this.ghostly = Random.Range(30,120);
+            this.spriter.color = new Color(1, 1, 1, .5f);
+            this.GetComponent<Collider2D>().isTrigger = true;
+        }
+    }
+    void BecomeUnghostly()
+    {
+        this.ghostly = 0;
+        this.spriter.color = Color.white;
+        this.GetComponent<Collider2D>().isTrigger = false;
     }
 }

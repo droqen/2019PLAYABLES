@@ -17,6 +17,12 @@
             choices = new List<T>();
         }
 
+        public ChoiceStack(params T[] items)
+        {
+            choices = new List<T>();
+            AddManyThenLock(items);
+        }
+
         public void AddManyThenLock(params T[] items)
         {
             for (var i = 0; i < items.Length; i++) Add(items[i]);
@@ -33,6 +39,11 @@
             if (shuffle) Util.shufl(ref choices, start: lockIndex);
             locked = true;
             lockIndex = choices.Count;
+        }
+
+        public T GetRandom()
+        {
+            return choices[Random.Range(0, choices.Count)];
         }
 
         public T GetFirstTrue(System.Func<T,bool> func, T defaultValue = default(T))

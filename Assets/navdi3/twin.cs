@@ -12,7 +12,7 @@
         public twin(Vector2 v2) { this.x = (int)v2.x; this.y = (int)v2.y; }
         public twin(int x, int y) { this.x = x; this.y = y; }
         public int taxicabLength { get { return Mathf.Abs(x) + Mathf.Abs(y); } }
-        public float sqrLength { get { return x * x + y * y; } }
+        public int sqrLength { get { return x * x + y * y; } }
 
         public static twin operator +(twin p1, twin p2) { return new twin(p1.x + p2.x, p1.y + p2.y); }
         public static twin operator -(twin p1, twin p2) { return new twin(p1.x - p2.x, p1.y - p2.y); }

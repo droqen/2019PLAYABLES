@@ -35,10 +35,7 @@ public class BroMazerPillBug : BroMazer
 
             if (IsWithinDistOfCentered(2f))
             {
-                var dirs = new ChoiceStack<twin>();
-                dirs.AddManyThenLock(twin.compass);
-                dirs.RemoveAll(-lastMove);
-                lastMove = dirs.GetFirstTrue(this.TryMove);
+                ChooseNewDir_Forward();
             }
 
         }
@@ -47,6 +44,7 @@ public class BroMazerPillBug : BroMazer
     void SetBalled(bool value)
     {
         if (this.balled != value) {
+
             this.balled = value;
 
             if (value) {
@@ -56,6 +54,9 @@ public class BroMazerPillBug : BroMazer
             {
                 //body.sharedMaterial = unballedMaterial;
             }
+
+            RefreshCell();
+            lastMove = twin.zero;
 
             for (var i = 0; i < bani.spriteIds.Length; i++) bani.spriteIds[i] = 54 + i + (value ? 10 : 0);
         }

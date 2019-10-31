@@ -7,6 +7,7 @@
 
     public class MazeBody : MonoBehaviour
     {
+        virtual public bool CanMoveFromTo(twin from_pos, twin target_pos) { return CanMoveTo(target_pos); }
         virtual public bool CanMoveTo(twin target_pos) { return !IsSolid(target_pos); }
         virtual public void OnSetup() { }
         virtual public void OnMoved(twin prev_pos, twin target_pos) { }
@@ -36,6 +37,11 @@
                     OnMoved(prev_pos, value);
                 }
             }
+        }
+
+        public bool TryMoveTo(twin target)
+        {
+            return TryMove(target - my_cell_pos);
         }
 
         public bool TryMove(twin move)
