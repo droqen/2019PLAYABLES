@@ -12,13 +12,22 @@
     {
         public Grid grid { get { return GetComponent<Grid>(); } }
 
-        public Tilemap tilemap;
-
         public Dictionary<twin, HashSet<MazeBody>> bodyHeaps;
+
+        public System.Func<twin, bool> IsTileSolid; // must be reassigned
 
         private void Awake()
         {
             bodyHeaps = new Dictionary<twin, HashSet<MazeBody>>();
+
+            if (IsTileSolid == null) IsTileSolid = cell =>
+                {
+                    var tile = GetComponentInChildren<Tilemap>().GetTile(cell);
+                    if (tile == null || ((UnityEngine.Tilemaps.Tile)tile).colliderType == UnityEngine.Tilemaps.Tile.ColliderType.None)
+                    { return false; } // not solid
+                    else
+                    { return true; } // yes solid
+                };
         }
 
         static HashSet<MazeBody> noBodies = new HashSet<MazeBody>();

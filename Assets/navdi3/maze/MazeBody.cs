@@ -118,14 +118,7 @@
 
         protected bool IsSolid(twin pos)
         {
-            var tile = master.tilemap.GetTile(pos);
-            if (tile == null || ((UnityEngine.Tilemaps.Tile)tile).colliderType == UnityEngine.Tilemaps.Tile.ColliderType.None)
-            {
-                return false; // not solid
-            } else
-            {
-                return true;
-            }
+            return master.IsTileSolid(pos);
         }
 
         private void OnEnable()

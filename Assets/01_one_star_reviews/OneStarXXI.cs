@@ -20,7 +20,7 @@ public class OneStarXXI : navdi3.xxi.BaseTilemapXXI
         throw new System.NotImplementedException();
     }
 
-    public override void SpawnTileId(int TileId, Vector3Int TilePos)
+    public override void SpawnTileId(int TileId, navdi3.twin TilePos)
     {
         throw new System.NotImplementedException();
     }

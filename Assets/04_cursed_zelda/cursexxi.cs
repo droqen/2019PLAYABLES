@@ -72,7 +72,7 @@ public class cursexxi : navdi3.xxi.BaseTilemapXXI
         return new int[] { 50 };
     }
 
-    public override void SpawnTileId(int TileId, Vector3Int TilePos)
+    public override void SpawnTileId(int TileId, navdi3.twin TilePos)
     {
         throw new System.NotImplementedException();
     }

@@ -1,54 +1,65 @@
 ﻿namespace navdi3.maze
 {
 
-    using UnityEngine;
-    using System.Collections;
-    using System.Collections.Generic;
+	using UnityEngine;
+	using System.Collections;
+	using System.Collections.Generic;
 
-    using navdi3;
-    using navdi3.xxi;
+	using navdi3;
+	using navdi3.xxi;
 
-    public static class MazeUtil
-    {
-        public static List<twin> AStar(AStarMapData data, twin start, twin end)
-        {
-            return new AStarMapper(data, start, end).path;
-        }
+    public interface IMazeTileGetter
+	{
+		int Gett(twin cell);
+	}
 
-        static twin LowestFCost(List<twin> list, MazeBody body, twin star, twin end)
-        {
-            throw new System.NotImplementedException();
-        }
-        static float FCost(twin cell, MazeBody body, twin star, twin end)
-        {
-            throw new System.NotImplementedException();
-        }
+	//   public class MazeTileGetterLambda : IMazeTileGetter
+	//{
+
+	//}
+
+	public interface IMazeWalker
+	{
+		int GetMoveCost(twin a, twin b);
+	}
+	public class MazeWalkerLambda : IMazeWalker {
+		System.Func<twin, twin, int> fn;
+		public MazeWalkerLambda(System.Func<twin, twin, int> fnGetMoveCost)
+		{
+			this.fn = fnGetMoveCost;
+		}
+		public int GetMoveCost(twin a, twin b)
+	    {
+            return this.fn(a, b);
+	    }
     }
 
-    public class AStarMapData
+    public class AStarPather
     {
-        BaseTilemapXXI txxi;
-        MazeMaster master;
-        MazeBody templateBody;
+		IMazeWalker[] walkers;
         twinrect bounds;
-        public AStarMapData(BaseTilemapXXI txxi, MazeMaster master, MazeBody templateBody, twinrect bounds)
+        public AStarPather(IMazeWalker walker, twinrect? bounds = null)
         {
-            this.txxi = txxi;
-            this.master = master;
-            this.templateBody = templateBody;
-            this.bounds = bounds;
+			this.walkers = new IMazeWalker[bounds.HasValue ? 2 : 1];
+			this.walkers[0] = walker;
+			if (bounds.HasValue)
+				this.walkers[1] = new MazeWalkerLambda((a, b) => { return bounds.Value.Contains(b)?0:int.MaxValue; });
         }
-        public bool CanMoveFromTo(twin a, twin b)
+        public int GetMoveCost(twin a, twin b)
         {
-            if (!this.bounds.Contains(b)) return false; // out of bounds.
-            return this.templateBody.CanMoveFromTo(a, b);
+            var cost = 0;
+
+			foreach (var walker in walkers) cost = Mathf.Max(cost, walker.GetMoveCost(a, b));
+
+			return cost;
         }
     }
-    class AStarMapper
+    public class AStarPath
     {
-        public List<twin> path { get; private set; }
+        public List<twin> cells { get; private set; }
+        public int cost { get; private set; }
         Dictionary<twin, AStarNode> open, closed;
-        public AStarMapper(AStarMapData data, twin start, twin end)
+        public AStarPath(AStarPather pather, twin start, twin end)
         {
             var start_node = new AStarNode(start);
             var end_node = new AStarNode(start);
@@ -66,30 +77,41 @@
 
                 if (here.pos == end)
                 {
-                    this.path = new List<twin>();
-                    this.path.Add(here.pos);
+                    this.cost = here.g;
+
+                    this.cells = new List<twin>();
+                    this.cells.Add(here.pos);
                     while(here.parent.HasValue)
                     {
                         here = closed[here.parent.Value];
-                        this.path.Add(here.pos);
+                        this.cells.Add(here.pos);
                     }
-                    this.path.Reverse();
+                    this.cells.Reverse();
                     return; // done
                 }
 
-                var children = new HashSet<AStarNode>();
+                var children = new List<AStarNode>();
+                var childrencosts = new List<int>();
 
                 twin.ShuffleCompass();
                 foreach(var dir in twin.compass)
                 {
                     var there = new AStarNode(here.pos + dir, here.pos);
-                    if (data.CanMoveFromTo(here.pos, there.pos)) children.Add(there);
+                    var stepcost = pather.GetMoveCost(here.pos, there.pos);
+                    if (stepcost < int.MaxValue && here.g + stepcost >= 0)
+                    {
+                        children.Add(there);
+                        childrencosts.Add(stepcost);
+                    }
                 }
 
-                foreach(var child in children)
+                for(int i = 0; i < children.Count; i++)
                 {
+                    var child = children[i];
+                    var stepcost = childrencosts[i];
+
                     if (closed.ContainsKey(child.pos)) continue;
-                    int g = here.g + 1;
+                    int g = here.g + stepcost;
                     int h = (here.pos - child.pos).sqrLength;
                     int f = g + h;
                     if (open.TryGetValue(child.pos, out var existing_node))
@@ -99,9 +121,8 @@
                     open[child.pos] = new AStarNode(child.pos, child.parent, g, h, f);
                 }
             }
-
         }
-        public AStarNode GetLowestFNode()
+        AStarNode GetLowestFNode()
         {
             float lowest_f_value = float.MaxValue;
             AStarNode lowest_f_node = default(AStarNode);
@@ -117,6 +138,7 @@
             return lowest_f_node;
         }
     }
+
     struct AStarNode
     {
         public twin pos { get; private set; }

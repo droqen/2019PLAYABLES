@@ -21,8 +21,18 @@
 
         public void SetupTileset(SpriteLot tilesetSprites, int[] solidTileIds, int[] spawnTileIds)
         {
-            HashSet<int> solidTileSet = new HashSet<int>(solidTileIds);
-            this.spawnTileSet = new HashSet<int>(spawnTileIds);
+            this.SetupTileset(tilesetSprites, new HashSet<int>(solidTileIds), new HashSet<int>(spawnTileIds));
+        }
+
+        public void SetupTileset(SpriteLot tilesetSprites, HashSet<int> solidTileSet, HashSet<int> spawnTileSet)
+        {
+            if (tilesetSprites.Length == 0)
+            {
+                Dj.Crashf("TiledLoader.SetupTileset was passed empty SpriteLot {0}.", tilesetSprites.gameObject.name);
+            }
+
+            //HashSet<int> solidTileSet = new HashSet<int>(solidTileIds);
+            this.spawnTileSet = spawnTileSet;
 
             tileset = new Tile[tilesetSprites.Length];
             for (int i = 0; i < tileset.Length; i++)
@@ -33,20 +43,20 @@
             }
         }
 
-        public void PlaceTiles(TiledLevelData levelData, Tilemap tilemap, System.Action<int, Vector3Int> spawnFunction)
+        public void PlaceTiles(TiledLevelData levelData, maze.ITileTTs tilemap, System.Action<int, twin> spawnFunction)
         {
             tilemap.ClearAllTiles();
 
-            Vector3Int tile_pos = new Vector3Int(0, levelData.height - 1, 0);
+            twin tile_pos = new twin(0, levelData.height - 1);
             foreach (var tile_id in levelData.tile_ids)
             {
                 if (spawnTileSet.Contains(tile_id))
                 {
                     spawnFunction(tile_id, tile_pos);
-                    tilemap.SetTile(tile_pos, tileset[0]);
+                    tilemap.Sett(tile_pos, 0);
                 } else if (tile_id >= 0)
                 {
-                    tilemap.SetTile(tile_pos, tileset[tile_id]);
+                    tilemap.Sett(tile_pos, tile_id);
                 }
 
                 tile_pos.x++;

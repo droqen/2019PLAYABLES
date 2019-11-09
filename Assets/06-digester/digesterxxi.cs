@@ -75,9 +75,8 @@ public class digesterxxi : BaseTilemapXXI
         return new int [] { 50, 52, 56, };
     }
 
-    public override void SpawnTileId(int TileId, Vector3Int TilePos)
+    public override void SpawnTileId(int TileId, navdi3.twin cell)
     {
-        twin cell = new twin(TilePos);
         switch(TileId)
         {
             case 50:
