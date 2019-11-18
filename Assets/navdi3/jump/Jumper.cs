@@ -75,7 +75,7 @@
             if (body.velocity.y <= .01f)
             {
                 RaycastHit2D hit;
-                hit = Physics2D.BoxCast(body.position + box.offset, box.size - Vector2.right * .01f, 0, Vector2.down, .99f, LayerMask.GetMask("Solid"));
+                hit = Physics2D.BoxCast(body.position + box.offset, box.size - Vector2.right * .01f, 0, Vector2.down, .99f, LayerMask.GetMask("Floor"));
                 if (hit.collider != null) return true;
             }
 

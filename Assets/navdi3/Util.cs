@@ -4,6 +4,16 @@
     using System.Collections.Generic;
     public class Util
     {
+        public static void untiltrue(System.Func<bool> func, int maxTries = 100)
+        {
+            for (int i = 0; i < maxTries; i++)
+            {
+                if (func()) return;
+            }
+
+            throw Dj.Crashf("Util.untiltrue failed after a maximum of {0} attempts", maxTries);
+        }
+
         // shufl: list
         public static void shufl<T>(ref List<T> a, int start = -1, int end = -1)
         {
@@ -32,6 +42,57 @@
                 a[i] = a[j];
                 a[j] = temp;
             }
+        }
+
+        public static CollectionType findall<T, CollectionType>(ICollection<T> Items, System.Func<T, bool> FilterFN ) where CollectionType : ICollection<T>, new()
+        {
+            CollectionType found = new CollectionType();
+            foreach (var item in Items) if (FilterFN(item)) found.Add(item);
+            return found;
+        }
+
+        public static T findbest<T>(IEnumerable<T> Items, System.Func<T, float> EvalFN)
+        {
+            List<T> bestItems = new List<T>(); float bestValue = float.MinValue;
+            foreach (var item in Items)
+            {
+                var value = EvalFN(item);
+                if (value >= bestValue)
+                {
+                    if (value >= bestValue + Mathf.Epsilon)
+                    {
+                        bestItems.Clear();
+                        bestValue = value;
+                    }
+                    bestItems.Add(item);
+                }
+            }
+
+            if (bestItems.Count == 0) throw new System.Exception("findbest was given an empty collection. it failed");
+
+            return bestItems[Random.Range(0, bestItems.Count)];
+        }
+
+        public static T findbest<T>(IEnumerable<T> Items, System.Func<T, int> EvalFN)
+        {
+            List<T> bestItems = new List<T>(); int bestValue = int.MinValue;
+            foreach (var item in Items)
+            {
+                var value = EvalFN(item);
+                if (value >= bestValue)
+                {
+                    if (value > bestValue)
+                    {
+                        bestItems.Clear();
+                        bestValue = value;
+                    }
+                    bestItems.Add(item);
+                }
+            }
+
+            if (bestItems.Count == 0) throw new System.Exception("findbest was given an empty collection. it failed");
+
+            return bestItems[Random.Range(0, bestItems.Count)];
         }
 
         public static int[] shufl_order(int length)

@@ -18,6 +18,8 @@
         public Tilemap tilemap; // must be assigned
         public TextAsset firstLevel; // load first level
 
+        [HideInInspector] public maze.MazeMaster mazeMaster;
+
         abstract public int[] GetSolidTileIds();
         abstract public int[] GetSpawnTileIds();
         abstract public void SpawnTileId(int TileId, twin TilePos);
@@ -39,7 +41,10 @@
         public void InitializeManualTT()
         {
             var grid = tilemap.gameObject.GetComponentInParent<Grid>();
-            grid.gameObject.AddComponent<maze.MazeMaster>().IsTileSolid = cell => { return SolidTileIds.Contains(Gett(cell)); };
+
+            this.mazeMaster = grid.gameObject.GetComponent<maze.MazeMaster>();
+            if (this.mazeMaster == null) this.mazeMaster = grid.gameObject.AddComponent<maze.MazeMaster>();
+            this.mazeMaster.IsTileSolid = cell => { return SolidTileIds.Contains(Gett(cell)); };
 
             if (sprites.Length == 0)
             {

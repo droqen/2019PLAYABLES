@@ -16,13 +16,22 @@
         {
             choices = new List<T>();
         }
-
+        public ChoiceStack(ICollection<T> items)
+        {
+            choices = new List<T>();
+            AddManyThenLock(items);
+        }
         public ChoiceStack(params T[] items)
         {
             choices = new List<T>();
             AddManyThenLock(items);
         }
 
+        public void AddManyThenLock(ICollection<T> items)
+        {
+            foreach (var item in items) Add(item);
+            Lock();
+        }
         public void AddManyThenLock(params T[] items)
         {
             for (var i = 0; i < items.Length; i++) Add(items[i]);
@@ -51,6 +60,44 @@
             if (!locked) throw new System.Exception("ChoiceStack is not locked. Can't GetFirstTrue; call Lock() first");
             foreach (var choice in choices) if (func(choice)) return choice;
             return defaultValue;
+        }
+        public T GetHighest(System.Func<T, float> func, T defaultValue = default(T))
+        {
+            T highestItem = default(T);
+            float highestItemsValue = float.MinValue;
+
+            foreach (var choice in choices) {
+                var choiceValue = func(choice);
+                if (choiceValue > highestItemsValue)
+                {
+                    highestItem = choice;
+                    highestItemsValue = choiceValue;
+                }
+            }
+
+            if (highestItemsValue == float.MinValue) throw new System.Exception("ChoiceStack is empty OR all items are valued at MinValue (don't do this); GetHighest failed");
+
+            return highestItem;
+        }
+        // Same as above but for integers.
+        public T GetHighest(System.Func<T, int> func, T defaultValue = default(T))
+        {
+            T highestItem = default(T);
+            int highestItemsValue = int.MinValue;
+
+            foreach (var choice in choices)
+            {
+                var choiceValue = func(choice);
+                if (choiceValue > highestItemsValue)
+                {
+                    highestItem = choice;
+                    highestItemsValue = choiceValue;
+                }
+            }
+
+            if (highestItemsValue == int.MinValue) throw new System.Exception("ChoiceStack is empty OR all items are valued at MinValue (don't do this); GetHighest failed");
+
+            return highestItem;
         }
 
         public void RemoveAll(T item)

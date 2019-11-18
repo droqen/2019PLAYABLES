@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * 
- *
- */
-
-public class baddogxxi : MonoBehaviour
+public class CopyBoardAgentOnHit : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

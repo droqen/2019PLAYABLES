@@ -70,6 +70,11 @@
             return false;
         }
 
+        public void SnapMyCellPos()
+        {
+            my_cell_pos = new twin(master.grid.WorldToCell(this.transform.position));
+        }
+
         public void Setup(MazeMaster master, twin cell_pos)
         {
             if (master==null) throw new System.Exception("MazeBody.Setup bad param: MazeMaster is NULL");
@@ -87,10 +92,10 @@
             return GetCellCenterWorld(this.my_cell_pos) - transform.position;
         }
 
-        public bool IsWithinDistOfCentered(float maxDist = 8f)
+        public bool IsWithinDistOfCentered(float maxDist = 8f, Vector3 offset = default(Vector3))
 		{
-			return ToCentered().sqrMagnitude <= maxDist * maxDist;
-		}
+			return (ToCentered() + offset).sqrMagnitude <= maxDist * maxDist;
+        }
 
         public Vector3 GetCellCenterWorld(twin cell_pos)
         {
