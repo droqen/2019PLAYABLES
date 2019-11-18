@@ -12,7 +12,14 @@
             get
             {
                 if (banks == null) SetupBanks();
-                if (!banks.ContainsKey(bankName)) banks.Add(bankName, transform.Find(bankName).GetComponent<Bank>());
+                try
+                {
+                    if (!banks.ContainsKey(bankName)) banks.Add(bankName, transform.Find(bankName).GetComponent<Bank>());
+                } catch(System.NullReferenceException exc)
+                {
+                    Dj.Tempf("NullReference in BankLot. Debug A\nbanks - {0}\ntransform {1}\nbankName - {2}", banks, transform, bankName);
+                    throw exc;
+                }
                 return banks[bankName];
             }
         }
