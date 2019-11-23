@@ -4,6 +4,13 @@
     using System.Collections.Generic;
     public class Util
     {
+        public static int sign(float floatValue)
+        {
+            if (floatValue > float.Epsilon) return 1;
+            if (floatValue < -float.Epsilon) return -1;
+            return 0;
+        }
+
         public static void untiltrue(System.Func<bool> func, int maxTries = 100)
         {
             for (int i = 0; i < maxTries; i++)
