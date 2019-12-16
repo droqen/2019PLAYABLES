@@ -8,7 +8,7 @@ public class dungeonxxi : navdi3.xxi.BaseTilemapXXI
 {
     public static dungeonxxi Instance { get; private set; }
 
-    public navdi3.maze.MazeMaster mazeMaster;
+    //public navdi3.maze.MazeMaster mazeMaster;
 
     PlayerBodyCtrl player;
     GameObject cursor;

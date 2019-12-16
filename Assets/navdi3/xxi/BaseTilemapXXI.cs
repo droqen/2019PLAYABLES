@@ -15,8 +15,13 @@
     {
         public TiledLoader loader { get { return GetComponent<TiledLoader>(); } }
 
-        public Tilemap tilemap; // must be assigned
+        [Header("Only if using \"InitializeTileSystem\"")]
+
         public TextAsset firstLevel; // load first level
+
+        [Header("Must be assigned")]
+
+        public Tilemap tilemap; // must be assigned
 
         [HideInInspector] public maze.MazeMaster mazeMaster;
 

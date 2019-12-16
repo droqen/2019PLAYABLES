@@ -381,7 +381,7 @@ RenderTexture:
     m_WrapW: 1
   m_Dimension: 2
   m_VolumeDepth: 1
---- !u!84 &1787225777
+--- !u!84 &2038520270
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -487,11 +487,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 1787225777}
+      objectReference: {fileID: 2038520270}
     - target: {fileID: 8721497846820241106, guid: a87e598a749bb4800b52ead0fc4cc76a,
         type: 3}
       propertyPath: orthographic size
       value: 144
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721497846413843487, guid: a87e598a749bb4800b52ead0fc4cc76a,
+        type: 3}
+      propertyPath: orthographic size
+      value: 1.5798612
       objectReference: {fileID: 0}
     - target: {fileID: 8721497846820241116, guid: a87e598a749bb4800b52ead0fc4cc76a,
         type: 3}
@@ -512,11 +517,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1111112
-      objectReference: {fileID: 0}
-    - target: {fileID: 8721497846413843487, guid: a87e598a749bb4800b52ead0fc4cc76a,
-        type: 3}
-      propertyPath: orthographic size
-      value: 3.1284723
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a87e598a749bb4800b52ead0fc4cc76a, type: 3}

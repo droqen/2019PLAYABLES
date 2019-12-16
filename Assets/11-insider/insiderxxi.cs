@@ -10,6 +10,16 @@
 
     public class insiderxxi : BaseTilemapXXI
     {
+        public twin[] oxygenIntakes;
+
+        public twin bloodSpawnPoint;
+
+        public float toNextBreath = 10;
+
+        public AStarPather patherFindDanger;
+        public AStarPather patherFindOxygen;
+        public AStarPather patherFindRedblood;
+
         public override int[] GetSolidTileIds()
         {
             return new int[] { 1 };
@@ -46,6 +56,18 @@
             {
                 for (int i = 0; i < 10; i++)
                     if (GenerateNewLevel()) break;
+            }
+
+            toNextBreath -= Time.deltaTime;
+            if (toNextBreath<0)
+            {
+                toNextBreath = 10;
+                foreach(twin intake in oxygenIntakes)
+                {
+                    banks["oxygen"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, intake);
+                    if (Random.value < .5f) banks["oxygen"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, intake);
+                    if (Random.value < .25f) banks["oxygen"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, intake);
+                }
             }
         }
 
@@ -147,12 +169,25 @@
             var freeSpawnCells = new List<twin>();
             playArea.DoEach(cell => { if (Gett(cell) == 0) freeSpawnCells.Add(cell); });
             Util.shufl(ref freeSpawnCells);
-
-            banks["guy"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, freeSpawnCells[0]);
-            banks["pill"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, freeSpawnCells[1]);
-            banks["virus"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, freeSpawnCells[2]);
-            banks["player"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, freeSpawnCells[3]);
             
+            banks["player"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, freeSpawnCells[0]);
+
+            bloodSpawnPoint = freeSpawnCells[1];
+
+            for (int i = 0; i < 2; i++)
+            {
+                banks["redblood"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, bloodSpawnPoint);
+                banks["whiteblood"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, bloodSpawnPoint);
+            }
+
+            oxygenIntakes = new twin[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                oxygenIntakes[i] = freeSpawnCells[2 + i];
+                banks["virus"].Spawn<InsiderBasicAgent>(GetEntLot("guys")).Setup(mazeMaster, oxygenIntakes[i]);
+            }
+
             return true;
         }
     }

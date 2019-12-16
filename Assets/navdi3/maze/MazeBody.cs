@@ -12,7 +12,7 @@
         virtual public void OnSetup() { }
         virtual public void OnMoved(twin prev_pos, twin target_pos) { }
 
-        public twin lastMove { get; protected set; }
+        public twin lastMove { get; set; }
 
         [HideInInspector] public MazeMaster master;
         twin _my_cell_pos;
